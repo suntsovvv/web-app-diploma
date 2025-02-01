@@ -9,7 +9,7 @@ on:
       - 'v*'
 env:
   IMAGE_NAME: suntsovvv/web-app-diploma
-  NAMESPACE: default
+  NAMESPACE: web-app-diploma
   DEPLOYMENT_NAME: web-app-diploma
 
 jobs:
@@ -52,8 +52,7 @@ jobs:
    
       - name: Deploy to Kubernetes
         run: |
-          kubectl set image deployment/${{ env.DEPLOYMENT_NAME }} \
-          web-app-diploma=${{ env.IMAGE_NAME }}:${{ env.TAG }} -n ${{ env.NAMESPACE }}
+          kubectl set image deployment/${{ env.DEPLOYMENT_NAME }} web-app-diploma=${{ env.IMAGE_NAME }}:${{ env.TAG }} -n ${{ env.NAMESPACE }}
           kubectl rollout status deployment/${{ env.DEPLOYMENT_NAME }} -n ${{ env.NAMESPACE }}          
 
     
