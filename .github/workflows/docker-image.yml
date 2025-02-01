@@ -1,0 +1,45 @@
+
+name: Build and Deploy to Kubernetes
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: k8s-master
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Determine Docker tag
+        id: docker_tag
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            echo "tag=latest" >> $GITHUB_ENV
+          else
+            echo "tag=${GITHUB_REF##*/}" >> $GITHUB_ENV
+          fi
+
+      - name: Build Docker image
+        run: |
+          sudo docker build . -t suntsovvv/web-app-diploma:${{ env.tag }}
+
+      - name: Push Docker image
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+          sudo docker push suntsovvv/web-app-diploma:${{ env.tag }}
+
+      - name: Set up Kubernetes context
+        run: |
+          echo "${{ secrets.KUBE_CONFIG }}" > kubeconfig
+          export KUBECONFIG=$(pwd)/kubeconfig
+
+      - name: Deploy to Kubernetes
+        run: |
+          sudo kubectl set image deployment/web-app-diploma netology-diploma-site=suntsovvv/web-app-diploma:${{ env.tag }} -n web-app-diploma
+          sudo kubectl rollout status deployment/web-app-diploma -n web-app-diploma
