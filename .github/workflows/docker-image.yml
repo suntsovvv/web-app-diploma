@@ -53,6 +53,7 @@ jobs:
         run: |
            if [[ "${{ github.ref }}" == refs/tags/* ]]; then
             echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+           fi 
       - name: Deploy to Kubernetes
        
         run: |
