@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: k8s-master
+    runs-on: self-hosted
 
     steps:
       - name: Checkout repository
