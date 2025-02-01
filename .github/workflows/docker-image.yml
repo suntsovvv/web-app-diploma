@@ -19,10 +19,10 @@ jobs:
       - name: Determine Docker tag
         id: docker_tag
         run: |
-          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            echo "tag=latest" >> $GITHUB_ENV
-          else
-            echo "tag=${GITHUB_REF##*/}" >> $GITHUB_ENV
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "TAG=latest" >> $GITHUB_ENV
+          elif [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
           fi
 
       - name: Build Docker image
@@ -38,11 +38,6 @@ jobs:
       - name: Push Docker image
         run: |
           docker push suntsovvv/web-app-diploma:${{ env.tag }}
-
-#      - name: Set up Kubernetes context
- #       run: |
-  #        echo "${{ secrets.KUBE_CONFIG }}" > kubeconfig
-   #       export KUBECONFIG=$(pwd)/kubeconfig
 
       - name: Deploy to Kubernetes
         run: |
