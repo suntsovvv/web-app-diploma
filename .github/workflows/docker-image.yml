@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/suntsovvv
+        uses: actions/checkout@v2
 
       - name: Determine Docker tag
         id: docker_tag
