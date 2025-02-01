@@ -27,7 +27,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          sudo docker build . -t suntsovvv/web-app-diploma:${{ env.tag }}
+          docker build . -t suntsovvv/web-app-diploma:${{ env.tag }}
       
       - name: Login to Docker Hub  
         run: |
@@ -36,7 +36,7 @@ jobs:
           
       - name: Push Docker image
         run: |
-          sudo docker push suntsovvv/web-app-diploma:${{ env.tag }}
+          docker push suntsovvv/web-app-diploma:${{ env.tag }}
 
 #      - name: Set up Kubernetes context
  #       run: |
